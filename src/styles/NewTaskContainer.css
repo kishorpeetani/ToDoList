@@ -69,3 +69,17 @@ input:focus, textarea:focus{
     border-width: 2px;
     border-color: hsl(217, 100%, 60%);
 }
+
+@media (prefers-color-scheme: light) {
+    .newTaskContainer{
+        background: hsl(0, 0%, 95%);
+        border-color: hsl(0, 0%, 75%);
+    }
+    .closeBtn{
+        color: black;
+    }
+    .newTaskContainer input, .newTaskContainer textarea{
+        color: black;
+        background-color: hsl(0, 0%, 92%);
+    }
+}

@@ -5,10 +5,9 @@
     padding: 25px 20px 20px 20px;
     border-radius: 5px;
     text-wrap: wrap;
-    border: 1px solid hsl(0, 0%, 15%);
+    border: 1px solid hsl(0, 0%, 30%);
 }
 .title{
-    color: white;
     display: flex;
     font-size: 1.8rem;
     font-weight: 700;
@@ -26,4 +25,14 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+@media (prefers-color-scheme: light) {
+    .taskContainer{
+        color: black;
+        background-color: hsl(0, 0%, 100%);
+        border-color: hsl(0, 0%, 85%);
+    }
+    .deleteBtn{
+        background-color: hsl(0, 0%, 100%);
+    }
 }
