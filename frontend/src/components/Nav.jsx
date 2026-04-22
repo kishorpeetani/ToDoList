@@ -9,7 +9,7 @@ export function Nav({ newTaskContaineropen, setnewTaskContainer }){
       <nav>
         <div>ToDoList</div>
         <button onClick={openOrClose}>
-            + New Task
+          Add Task
         </button>
       </nav>
     );
