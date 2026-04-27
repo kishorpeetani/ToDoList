@@ -7,7 +7,7 @@ export const authorize = async(req, res, next)=>{
         let token;
 
         if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
-            token = req.headers.authorization.split(" ")[0];
+            token = req.headers.authorization.split(" ")[1];
         }
 
         if(!token){
@@ -33,7 +33,7 @@ export const authorize = async(req, res, next)=>{
     }
 };
 
-export const admin = async(req, res, next)=>{
+export const isAdmin = async(req, res, next)=>{
     if(!req.user || req.user.role !== "admin"){
         return res.status(401).json({ message : "Access denied. Admin only !!!" });
     }
