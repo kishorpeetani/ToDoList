@@ -4,6 +4,17 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env.js";
 
+const generateToken = (userId)=>{
+    return jwt.sign({ userId }, JWT_SECRET, { expiresIn : JWT_EXPIRES_IN});
+}
+
+export const getMe = async(req, res)=>{
+    res.status(200).json({
+        success: true,
+        user: req.user
+    });
+}
+
 export const signUp = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -25,17 +36,24 @@ export const signUp = async (req, res, next) => {
 
         const newUsers = await User.create([{ email, password: hashedPassword }], { session });
 
-        const token = jwt.sign({ userId: newUsers[0]._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+        const token = generateToken(newUsers[0]._id);
 
         await session.commitTransaction();
         session.endSession();
 
+        res.cookie("token", token, {
+            httpOnly : true,
+            secure: false,
+            sameSite : "lax",
+            maxAge : 7 * 24 * 60 * 60 * 1000
+        });
+
         res.status(201).json({
             success: true,
             message: "User created Successfully",
-            data: {
-                token,
-                user: newUsers[0]
+            user : {
+                _id : newUsers[0]._id,
+                email : newUsers[0].email
             }
         });
     }
@@ -46,7 +64,7 @@ export const signUp = async (req, res, next) => {
     }
 }
 
-export const signIn = async (req, res) => {
+export const signIn = async (req, res, next) => {
     try{
         const { email, password } = req.body;
 
@@ -66,7 +84,14 @@ export const signIn = async (req, res) => {
             throw error;
         }
 
-        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+        const token = generateToken(user._id);
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            maxAge : 7 * 24 * 60 * 60 * 1000
+        });
 
         res.status(200).json({
             success: true,
@@ -81,3 +106,15 @@ export const signIn = async (req, res) => {
     }
 };
 
+export const signOut = async (req, res) => {
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax"
+    });
+
+    res.status(200).json({
+        success: true,
+        message: "Logged out successfully"
+    });
+};

@@ -4,7 +4,7 @@ export const getUserTasks = async(req, res, next)=>{
     try{
         const userId = req.user._id;
 
-        const tasks = await Task.find({ user : userId }).sort({ createdAt : -1 });
+        const tasks = await Task.find({ user : userId }).sort({ updatedAt : -1 });
 
         res.status(200).json({
             success : true,

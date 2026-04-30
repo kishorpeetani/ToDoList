@@ -1,35 +1,80 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/NewTaskContainer.css";
+import { createTask, updateTask } from "../api/task.api.js";
 
-export function NewTaskContainer({ tasks, setTasks, setnewTaskContainer }) {
-  
-  function saveTitle(event){
+export function NewTaskContainer({
+  tasks,
+  setTasks,
+  setnewTaskContainer,
+  fetchTasks,
+  editingTask,
+  setEditingTask,
+}) {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    if (editingTask) {
+      setTitle(editingTask.title || "");
+      setDescription(editingTask.description || "");
+    } else {
+      setTitle("");
+      setDescription("");
+    }
+  }, [editingTask]);
+
+  function saveTitle(event) {
     setTitle(event.target.value);
   }
-  const [ title, setTitle ] = useState("");
 
-  function saveDescription(event){
+  function saveDescription(event) {
     setDescription(event.target.value);
   }
-  const [ description, setDescription ] = useState("");
 
-  console.log(title);
-  console.log(description);
-
-  function addNewTask(event){
-    event.preventDefault();
-    const newTasks = [
-      ...tasks,
-      {
-        title: title,
-        description: description,
-        id: Math.random().toString(36).substring(2, 9),
-      }
-    ];
-    setTasks( newTasks );
-    setTitle("");
-    setDescription("");
+  function closeForm() {
     setnewTaskContainer(false);
+    setEditingTask(null);
+  }
+
+  async function addNewTask(event) {
+    event.preventDefault();
+
+    if (editingTask) {
+      const taskId = editingTask.id || editingTask._id;
+      const updatedTasks = tasks.map((task) =>
+        task.id === taskId || task._id === taskId
+          ? { ...task, title, description }
+          : task
+      );
+
+      if (editingTask._id) {
+        try {
+          await updateTask(taskId, title, description);
+          // Re-fetch tasks to get proper sorting with updated task at top
+          fetchTasks();
+        } catch (error) {
+          console.error("Failed to update task", error);
+          setTasks(updatedTasks);
+        }
+      } else {
+        setTasks(updatedTasks);
+      }
+
+      setEditingTask(null);
+      setnewTaskContainer(false);
+      return;
+    }
+
+    try {
+      await createTask(title, description);
+      setTitle("");
+      setDescription("");
+      setnewTaskContainer(false);
+      fetchTasks();
+    } catch (error) {
+      console.error(error);
+      alert(error.message || "Something went wrong");
+    }
   }
 
   return (
@@ -37,27 +82,36 @@ export function NewTaskContainer({ tasks, setTasks, setnewTaskContainer }) {
       <div className="newTask">
         <form className="newTaskContainer" onSubmit={addNewTask}>
           <div className="header">
-            <p>New Task</p>
-            <button type="button" className="closeBtn"
-              onClick={() => {
-                setnewTaskContainer(false);
-              }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" height="25px" viewBox="0 -960 960 960" width="25px" fill="currentColor"><path d="M256-213.85 213.85-256l224-224-224-224L256-746.15l224 224 224-224L746.15-704l-224 224 224 224L704-213.85l-224-224-224 224Z"/></svg>
+            <p>{editingTask ? "Edit Task" : "New Task"}</p>
+
+            <button type="button" className="closeBtn" onClick={closeForm}>
+              ✕
             </button>
           </div>
-          <input type="text" placeholder="Title" onChange={saveTitle} value={title} required/>
-          <textarea name="" id="" placeholder="Description.." rows={8} onChange={saveDescription} value={description} required/>
-          <button type="submit" className="addTaskBtn">Add Task</button>
+
+          <input
+            type="text"
+            placeholder="Title"
+            onChange={saveTitle}
+            value={title}
+            required
+          />
+
+          <textarea
+            placeholder="Description.."
+            rows={8}
+            onChange={saveDescription}
+            value={description}
+            required
+          />
+
+          <button type="submit" className="addTaskBtn">
+            {editingTask ? "Save Changes" : "Add Task"}
+          </button>
         </form>
       </div>
-      <div
-        className="closer"
-        onClick={() => {
-          setnewTaskContainer(false);
-        }}
-      >
-      </div>
+
+      <div className="closer" onClick={closeForm} />
     </>
   );
 }
