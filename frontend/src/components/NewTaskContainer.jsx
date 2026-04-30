@@ -9,6 +9,7 @@ export function NewTaskContainer({
   fetchTasks,
   editingTask,
   setEditingTask,
+  showNotification,
 }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -52,9 +53,11 @@ export function NewTaskContainer({
           await updateTask(taskId, title, description);
           // Re-fetch tasks to get proper sorting with updated task at top
           fetchTasks();
+          showNotification("Task updated successfully", "success");
         } catch (error) {
           console.error("Failed to update task", error);
           setTasks(updatedTasks);
+          showNotification(error.message || "Failed to update task", "error");
         }
       } else {
         setTasks(updatedTasks);
@@ -71,9 +74,10 @@ export function NewTaskContainer({
       setDescription("");
       setnewTaskContainer(false);
       fetchTasks();
+      showNotification("Task created successfully", "success");
     } catch (error) {
       console.error(error);
-      alert(error.message || "Something went wrong");
+      showNotification(error.message || "Something went wrong", "error");
     }
   }
 

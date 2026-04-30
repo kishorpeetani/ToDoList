@@ -5,6 +5,7 @@ import { SignUp } from "./SignUp";
 import { Nav } from "./components/Nav";
 import { NewTaskContainer } from "./components/NewTaskContainer";
 import { TasksContainer } from "./components/TasksContainer";
+import { Notification } from "./components/Notification";
 import { getMe, signOut } from "./api/auth.api.js";
 import { getTasks } from "./api/task.api.js";
 
@@ -20,6 +21,7 @@ function App() {
 
   const [loading, setLoading] = useState(true);
   const [tasksLoading, setTasksLoading] = useState(true);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     checkAuth();
@@ -87,6 +89,14 @@ function App() {
     setnewTaskContainer(true);
   }
 
+  function showNotification(message, type = "error") {
+    setNotification({ message, type });
+
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000);
+  }
+
   if (loading) {
     return (
       <div className="loadingScreen">
@@ -96,15 +106,22 @@ function App() {
   }
   return (
     <>
+      {notification && (
+        <Notification
+          notification={notification}
+          onClose={() => setNotification(null)}
+        />
+      )}
       {!isLoggedIn ? (
         page === "signin" ? (
           <SignIn
             setIsLoggedIn={setIsLoggedin}
             setUser={setUser}
             setPage={setPage}
+            showNotification={showNotification}
           />
         ) : (
-          <SignUp setPage={setPage} />
+          <SignUp setPage={setPage} showNotification={showNotification} />
         )
       ) : (
         <>
@@ -122,6 +139,7 @@ function App() {
               fetchTasks={fetchTasks}
               editingTask={editingTask}
               setEditingTask={setEditingTask}
+              showNotification={showNotification}
             />
           )}
           <TasksContainer

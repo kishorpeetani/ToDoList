@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { signIn } from "./api/auth.api.js";
 
-export function SignIn({ setIsLoggedIn, setUser, setPage }) {
+export function SignIn({ setIsLoggedIn, setUser, setPage, showNotification }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -16,11 +16,12 @@ export function SignIn({ setIsLoggedIn, setUser, setPage }) {
         if (data.data?.user?.email) {
           setUser({ email: data.data.user.email });
         }
+        showNotification("Signed in successfully", "success");
       } else {
-        alert(data.message || "Sign in failed");
+        showNotification(data.message || "Sign in failed", "error");
       }
     } catch (err) {
-      alert(err.message || "Something went wrong");
+      showNotification(err.message || "Something went wrong", "error");
       console.error(err);
     }
   }

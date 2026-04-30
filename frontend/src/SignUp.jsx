@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { signUp } from "./api/auth.api.js";
 
-export function SignUp({ setPage }) {
+export function SignUp({ setPage, showNotification }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,13 +12,13 @@ export function SignUp({ setPage }) {
       const data = await signUp(email, password);
 
       if (data.success) {
-        alert("Account created successfully");
+        showNotification("Account created successfully", "success");
         setPage("signin");
       } else {
-        alert(data.message || "Sign up failed");
+        showNotification(data.message || "Sign up failed", "error");
       }
     } catch (error) {
-      alert(error.message || "Something went wrong");
+      showNotification(error.message || "Something went wrong", "error");
       console.error(error);
     }
   }
