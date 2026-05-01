@@ -10,7 +10,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-    origin: "https://to-do-list-iota-hazel-87.vercel.app/",
+    origin: "https://to-do-list-iota-hazel-87.vercel.app",
     credentials: true
 }));
 app.use(cookieParser());
