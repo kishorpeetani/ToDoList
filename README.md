@@ -208,7 +208,7 @@ Deploy frontend on Vercel with:
 
 ## 👨‍💻 Author
 
-Developed by **Kishore Kumar**
+Developed by **Peetani Kishor Kumar**
 
 A full-stack MERN project focused on secure authentication, clean architecture, and production-ready deployment.
 
