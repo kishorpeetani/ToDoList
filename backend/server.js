@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { PORT } from "./config/env.js";
+import { PORT, CLIENT_URL } from "./config/env.js";
 import connectToDB from './database/db.js';
 import tasksRouter from "./routes/tasks.routes.js";
 import authRouter from "./routes/auth.routes.js"
@@ -10,7 +10,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-    origin: "https://todolist.kishorkumar.app",
+    origin: CLIENT_URL,
     credentials: true
 }));
 app.use(cookieParser());
