@@ -1,5 +1,18 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+const handleResponse = async (response) => {
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+        const error = new Error(data?.message || "Request failed");
+        error.status = response.status;
+        error.data = data;
+        throw error;
+    }
+
+    return data;
+};
+
 export const signIn = async (email, password) => {
     const response = await fetch(`${API_BASE_URL}/auth/sign-in`, {
         method: "POST",
@@ -10,15 +23,7 @@ export const signIn = async (email, password) => {
         body: JSON.stringify({ email, password }),
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-        const error = new Error(data.message || "Sign in failed");
-        error.statusCode = response.status;
-        throw error;
-    }
-
-    return data;
+    return handleResponse(response);
 };
 
 export const signUp = async (email, password) => {
@@ -31,15 +36,7 @@ export const signUp = async (email, password) => {
         body: JSON.stringify({ email, password }),
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-        const error = new Error(data.message || "Sign up failed");
-        error.statusCode = response.status;
-        throw error;
-    }
-
-    return data;
+    return handleResponse(response);
 };
 
 export const getMe = async () => {
@@ -48,15 +45,7 @@ export const getMe = async () => {
         credentials: "include",
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-        const error = new Error(data.message || "Failed to get user info");
-        error.statusCode = response.status;
-        throw error;
-    }
-
-    return data;
+    return handleResponse(response);
 };
 
 export const signOut = async () => {
@@ -65,13 +54,5 @@ export const signOut = async () => {
         credentials: "include",
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-        const error = new Error(data.message || "Sign out failed");
-        error.statusCode = response.status;
-        throw error;
-    }
-
-    return data;
+    return handleResponse(response);
 };
