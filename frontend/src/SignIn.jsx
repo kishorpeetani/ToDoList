@@ -20,9 +20,15 @@ export function SignIn({ setIsLoggedIn, setUser, setPage, showNotification }) {
       } else {
         showNotification(data.message || "Sign in failed", "error");
       }
-    } catch (err) {
-      showNotification(err.message || "Something went wrong", "error");
-      console.error(err);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        showNotification("Invalid Credentials !!", "error");
+      } else if (error.response?.status === 404) {
+        showNotification("User not Found !!", "error");
+      } else {
+        showNotification("Something went wrong", "error");
+      }
+      console.error(error);
     }
   }
 
