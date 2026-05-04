@@ -18,10 +18,10 @@ export function SignUp({ setPage, showNotification }) {
         showNotification("Sign up failed", "error");
       }
     } catch (error) {
-      if (error.response?.status === 409) {
+      if (error.status === 409) {
         showNotification("Account already exists !!", "error");
       } else {
-        showNotification("Something went wrong", "error");
+        showNotification(error.message || "Something went wrong", "error");
       }
       console.error(error);
     }
