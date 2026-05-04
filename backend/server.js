@@ -5,6 +5,7 @@ import connectToDB from './database/db.js';
 import tasksRouter from "./routes/tasks.routes.js";
 import authRouter from "./routes/auth.routes.js"
 import cookieParser from "cookie-parser";
+import errorMiddleware from "./middleware/error.middleware.js";
 
 const app = express();
 
@@ -18,6 +19,8 @@ app.use(cookieParser());
 app.use("/tasks", tasksRouter);
 
 app.use("/auth", authRouter);
+
+app.use(errorMiddleware);
 
 app.listen(PORT, ()=>{
     console.log("Server running on port ",PORT);
