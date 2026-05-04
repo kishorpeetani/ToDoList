@@ -13,7 +13,9 @@ export const signIn = async (email, password) => {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.message || "Sign in failed");
+        const error = new Error(data.message || "Sign in failed");
+        error.statusCode = response.status;
+        throw error;
     }
 
     return data;
@@ -32,7 +34,9 @@ export const signUp = async (email, password) => {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.message || "Sign up failed");
+        const error = new Error(data.message || "Sign up failed");
+        error.statusCode = response.status;
+        throw error;
     }
 
     return data;
@@ -47,7 +51,9 @@ export const getMe = async () => {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.message || "Failed to get user info");
+        const error = new Error(data.message || "Failed to get user info");
+        error.statusCode = response.status;
+        throw error;
     }
 
     return data;
@@ -62,7 +68,9 @@ export const signOut = async () => {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.message || "Sign out failed");
+        const error = new Error(data.message || "Sign out failed");
+        error.statusCode = response.status;
+        throw error;
     }
 
     return data;
