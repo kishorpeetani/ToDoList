@@ -9,7 +9,9 @@ export const getTasks = async () => {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.message || "Failed to fetch tasks");
+        const error = new Error(data.message || "Failed to fetch tasks");
+        error.statusCode = response.status;
+        throw error;
     }
 
     return data;
@@ -28,7 +30,9 @@ export const createTask = async (title, description) => {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.message || "Failed to create task");
+        const error = new Error(data.message || "Failed to create task");
+        error.statusCode = response.status;
+        throw error;
     }
 
     return data;
@@ -47,7 +51,9 @@ export const updateTask = async (id, title, description) => {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.message || "Failed to update task");
+        const error = new Error(data.message || "Failed to update task");
+        error.statusCode = response.status;
+        throw error;
     }
 
     return data;
@@ -62,7 +68,9 @@ export const deleteTask = async (id) => {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.message || "Failed to delete task");
+        const error = new Error(data.message || "Failed to delete task");
+        error.statusCode = response.status;
+        throw error;
     }
 
     return data;
