@@ -21,12 +21,12 @@ export function SignIn({ setIsLoggedIn, setUser, setPage, showNotification }) {
         showNotification(data.message || "Sign in failed", "error");
       }
     } catch (error) {
-      if (error.response?.status === 401) {
+      if (error.status === 401) {
         showNotification("Invalid Credentials !!", "error");
-      } else if (error.response?.status === 404) {
+      } else if (error.status === 404) {
         showNotification("User not Found !!", "error");
       } else {
-        showNotification("Something went wrong", "error");
+        showNotification(error.message || "Something went wrong", "error");
       }
       console.error(error);
     }
