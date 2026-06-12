@@ -1,20 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { signIn } from "./api/auth.api.js";
 
 export function SignIn({ setIsLoggedIn, setUser, setPage, setPendingEmail, showNotification }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    const savedEmail =
-      sessionStorage.getItem("pendingEmail");
-
-    if (savedEmail) {
-      setEmail(savedEmail);
-      setPendingEmail(savedEmail);
-      setStep("otp");
-    }
-  }, []);
+  
 
   async function handleSubmit(e) {
     e.preventDefault();

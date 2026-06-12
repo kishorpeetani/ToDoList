@@ -12,14 +12,15 @@ export function SignUp({ setPage, setPendingEmail, showNotification }) {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    const savedEmail =
-      sessionStorage.getItem("pendingEmail");
+  const savedEmail =
+    sessionStorage.getItem("pendingEmail");
 
-    if (savedEmail) {
-      setEmail(savedEmail);
-      setStep("otp");
-    }
-  }, []);
+  if (savedEmail) {
+    setEmail(savedEmail);
+    setPendingEmail(savedEmail);
+    setStep("otp");
+  }
+}, []);
 
   async function handleVerifyOtp(e) {
     e.preventDefault();
@@ -34,6 +35,8 @@ export function SignUp({ setPage, setPendingEmail, showNotification }) {
         sessionStorage.removeItem(
           "pendingEmail"
         );
+
+        setPendingEmail("");
 
         showNotification(
           "Email verified successfully",

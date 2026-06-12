@@ -17,9 +17,6 @@ export const getMe = async (req, res) => {
 }
 
 export const signUp = async (req, res, next) => {
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
     try {
         const { email, password } = req.body;
 
@@ -39,7 +36,7 @@ export const signUp = async (req, res, next) => {
             100000 + Math.random() * 900000
         ).toString();
 
-        const newUsers = await User.create(
+        const newUser = await User.create(
             [{
                 email,
                 password: hashedPassword,
@@ -49,7 +46,6 @@ export const signUp = async (req, res, next) => {
                 ),
                 isVerified: false
             }],
-            { session }
         );
 
         await sendOtpEmail(email, otp);
@@ -58,19 +54,8 @@ export const signUp = async (req, res, next) => {
             success: true,
             message: "OTP sent successfully"
         });
-
-        res.status(201).json({
-            success: true,
-            message: "User created Successfully",
-            user: {
-                _id: newUsers[0]._id,
-                email: newUsers[0].email
-            }
-        });
     }
     catch (error) {
-        await session.abortTransaction();
-        session.endSession();
         next(error);
     }
 }
@@ -80,14 +65,6 @@ export const signIn = async (req, res, next) => {
         const { email, password } = req.body;
 
         const user = await User.findOne({ email }).select("+password");
-
-        if (!user.isVerified) {
-            return res.status(403).json({
-                success: false,
-                message: "Email not verified",
-                email: user.email,
-            });
-        }
 
         if (!user) {
             const error = new Error("User not found");
