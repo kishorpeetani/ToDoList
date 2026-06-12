@@ -56,3 +56,38 @@ export const signOut = async () => {
 
     return handleResponse(response);
 };
+
+export const verifyOtp = async (email, otp) => {
+  const response = await fetch(
+    `${API_BASE_URL}/auth/verify-otp`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        otp,
+      }),
+    }
+  );
+
+  return handleResponse(response);
+};
+
+export const resendOtp = async (email) => {
+  const response = await fetch(
+    `${API_BASE_URL}/auth/resend-otp`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+      }),
+    }
+  );
+
+  return handleResponse(response);
+};

@@ -12,4 +12,8 @@ authRoutes.post("/sign-in", signIn);
 
 authRoutes.post("/sign-out", signOut);
 
+authRoutes.post("/verify-otp", verifyOtp);
+
+authRoutes.post("/resend-otp", resendOtp);
+
 export default authRoutes;

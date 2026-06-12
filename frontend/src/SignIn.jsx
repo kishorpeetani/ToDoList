@@ -1,9 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "./api/auth.api.js";
 
-export function SignIn({ setIsLoggedIn, setUser, setPage, showNotification }) {
+export function SignIn({ setIsLoggedIn, setUser, setPage, setPendingEmail, showNotification }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    const savedEmail =
+      sessionStorage.getItem("pendingEmail");
+
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setPendingEmail(savedEmail);
+      setStep("otp");
+    }
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -21,7 +32,22 @@ export function SignIn({ setIsLoggedIn, setUser, setPage, showNotification }) {
         showNotification(data.message || "Sign in failed", "error");
       }
     } catch (error) {
-      if (error.status === 401) {
+
+      if (error.status === 403) {
+        sessionStorage.setItem(
+          "pendingEmail",
+          email
+        );
+
+        setPendingEmail(email);
+
+        showNotification(
+          "Please verify your email",
+          "error"
+        );
+
+        setPage("signup");
+      } else if (error.status === 401) {
         showNotification("Invalid Credentials !!", "error");
       } else if (error.status === 404) {
         showNotification("User not Found !!", "error");

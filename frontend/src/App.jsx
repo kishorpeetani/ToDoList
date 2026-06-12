@@ -10,6 +10,9 @@ import { getMe, signOut } from "./api/auth.api.js";
 import { getTasks } from "./api/task.api.js";
 
 function App() {
+  const [pendingEmail, setPendingEmail] = useState(
+    sessionStorage.getItem("pendingEmail") || ""
+  );
   const [isLoggedIn, setIsLoggedin] = useState(false);
   const [user, setUser] = useState(null);
 
@@ -118,10 +121,11 @@ function App() {
             setIsLoggedIn={setIsLoggedin}
             setUser={setUser}
             setPage={setPage}
+            setPendingEmail={setPendingEmail}
             showNotification={showNotification}
           />
         ) : (
-          <SignUp setPage={setPage} showNotification={showNotification} />
+          <SignUp setPage={setPage} setPendingEmail={setPendingEmail} showNotification={showNotification} />
         )
       ) : (
         <>
