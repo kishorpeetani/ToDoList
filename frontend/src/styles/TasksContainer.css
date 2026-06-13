@@ -3,8 +3,9 @@
     text-align: center;
     margin-top: 20vh;
 }
-#tasksContainer{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+#tasksContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }

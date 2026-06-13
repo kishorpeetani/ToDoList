@@ -1,14 +1,33 @@
 import { useState } from "react";
-import { signIn } from "./api/auth.api.js";
+import { useNavigate } from "react-router-dom";
+import { signIn } from "../api/auth.api.js";
+import "../styles/Auth.css";
 
-export function SignIn({ setIsLoggedIn, setUser, setPage, setPendingEmail, showNotification }) {
+export function SignIn({ setIsLoggedIn, setUser, showNotification }) {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  
-
   async function handleSubmit(e) {
     e.preventDefault();
+
+    if (!email.trim()) {
+      showNotification("Email is required", "error");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      showNotification("Enter valid email address", "error");
+      return;
+    }
+
+    if (!password.trim()) {
+      showNotification("Password is required", "error");
+      return;
+    }
 
     try {
       const data = await signIn(email, password);
@@ -23,21 +42,10 @@ export function SignIn({ setIsLoggedIn, setUser, setPage, setPendingEmail, showN
         showNotification(data.message || "Sign in failed", "error");
       }
     } catch (error) {
+      if (error.data?.code === "EMAIL_NOT_VERIFIED") {
+        showNotification("Please verify your email", "error");
 
-      if (error.status === 403) {
-        sessionStorage.setItem(
-          "pendingEmail",
-          email
-        );
-
-        setPendingEmail(email);
-
-        showNotification(
-          "Please verify your email",
-          "error"
-        );
-
-        setPage("signup");
+        navigate(`/verify-email?email=${encodeURIComponent(email)}`);
       } else if (error.status === 401) {
         showNotification("Invalid Credentials !!", "error");
       } else if (error.status === 404) {
@@ -51,9 +59,10 @@ export function SignIn({ setIsLoggedIn, setUser, setPage, setPendingEmail, showN
 
   return (
     <div className="authPage">
+      <span className="app-title">ToDoList</span>
       <div className="sign-box">
         <h2>Sign In</h2>
-        <form onSubmit={handleSubmit}>
+        <form noValidate onSubmit={handleSubmit}>
           <input
             type="email"
             placeholder="Email"
@@ -73,8 +82,17 @@ export function SignIn({ setIsLoggedIn, setUser, setPage, setPendingEmail, showN
         </form>
 
         <p>
+          <span
+            className="authLink"
+            onClick={() => navigate("/forgot-password")}
+          >
+            Forgot Password?
+          </span>
+        </p>
+
+        <p>
           New User?
-          <span className="authLink" onClick={() => setPage("signup")}>
+          <span className="authLink" onClick={() => navigate("/signup")}>
             Sign Up
           </span>
         </p>

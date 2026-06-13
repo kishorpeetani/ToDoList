@@ -1,78 +1,142 @@
 import Task from "../models/task.model.js"
 
-export const getUserTasks = async(req, res, next)=>{
-    try{
+export const getUserTasks = async (req, res, next) => {
+    try {
         const userId = req.user._id;
 
-        const tasks = await Task.find({ user : userId }).sort({ updatedAt : -1 });
+        const tasks = await Task.find({ user: userId }).sort({ updatedAt: -1 });
 
         res.status(200).json({
-            success : true,
-            count : tasks.length,
-            data : tasks
+            success: true,
+            count: tasks.length,
+            data: tasks
         });
-        
-    }catch(error){
+
+    } catch (error) {
         next(error);
     }
 }
 
-export const addTask = async(req, res, next)=>{
-    
-    try{
-        const newTask = await Task.create({ 
-            ...req.body,
-            user : req.user._id
+export const addTask = async (req, res, next) => {
+    try {
+        const { title, description } = req.body;
+
+        if (!title?.trim()) {
+            const error = new Error("Title is required");
+            error.statusCode = 400;
+            throw error;
+        }
+
+        if (!description?.trim()) {
+            const error = new Error("Description is required");
+            error.statusCode = 400;
+            throw error;
+        }
+
+        if (title.length > 100) {
+            const error = new Error("Title cannot exceed 100 characters");
+            error.statusCode = 400;
+            throw error;
+        }
+
+        if (description.length > 1500) {
+            const error = new Error("Description cannot exceed 1500 characters");
+            error.statusCode = 400;
+            throw error;
+        }
+
+        const newTask = await Task.create({
+            title: title.trim(),
+            description: description.trim(),
+            user: req.user._id,
         });
 
-        res.status(201).json({ success : true, data : newTask });
+        res.status(201).json({ success: true, data: newTask });
 
-    }catch(error){
+    } catch (error) {
         next(error);
     }
+};
 
-}
+export const updateTask = async (req, res, next) => {
+    try {
+        const { title, description } = req.body;
 
-export const updateTask = async(req, res, next)=>{
-    try{
         const task = await Task.findById(req.params.id);
 
-        if(!task){
+        if (!task) {
             const error = new Error("Task not found");
             error.statusCode = 404;
             throw error;
         }
 
-        if(task.user.toString() !== req.user._id.toString()){
-            const error = new Error("You are not the owner !!");
+        if (task.user.toString() !== req.user._id.toString()) {
+            const error = new Error("You are not the owner");
             error.statusCode = 401;
+            throw error;
+        }
+
+        if (!title?.trim()) {
+            const error = new Error("Title is required");
+            error.statusCode = 400;
+            throw error;
+        }
+
+        if (!description?.trim()) {
+            const error = new Error("Description is required");
+            error.statusCode = 400;
+            throw error;
+        }
+
+        if (title.trim().length > 100) {
+            const error = new Error(
+                "Title cannot exceed 100 characters"
+            );
+            error.statusCode = 400;
+            throw error;
+        }
+
+        if (description.trim().length > 1500) {
+            const error = new Error(
+                "Description cannot exceed 1500 characters"
+            );
+            error.statusCode = 400;
             throw error;
         }
 
         const updatedTask = await Task.findByIdAndUpdate(
             req.params.id,
-            req.body,
-            { new : true }
+            {
+                title: title.trim(),
+                description: description.trim(),
+            },
+            {
+                new: true,
+                runValidators: true,
+            }
         );
 
-        res.status(200).json({ success : true, data : updatedTask });
+        res.status(200).json({
+            success: true,
+            data: updatedTask,
+        });
 
-    }catch(error){
+    } catch (error) {
         next(error);
     }
-}
+};
 
-export const deleteTask = async(req, res, next)=>{
-    try{
+export const deleteTask = async (req, res, next) => {
+    try {
         const task = await Task.findById(req.params.id);
 
-        if(!task){
+        if (!task) {
             const error = new Error("Task not found");
             error.statusCode = 404;
             throw error;
         }
 
-        if(task.user.toString() !== req.user._id.toString()){
+        if (task.user.toString() !== req.user._id.toString()) {
             const error = new Error("You are not owner");
             error.statusCode = 401;
             throw error;
@@ -80,9 +144,9 @@ export const deleteTask = async(req, res, next)=>{
 
         await task.deleteOne();
 
-        res.status(200).json({ success : true, message : "Task deleted successfully"});
+        res.status(200).json({ success: true, message: "Task deleted successfully" });
 
-    }catch(error){
+    } catch (error) {
         next(error);
     }
 }

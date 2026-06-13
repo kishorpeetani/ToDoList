@@ -1,4 +1,6 @@
-.taskContainer{
+.taskContainer {
+    width: 100%;
+    max-width: 950px;
     color: hsl(0, 0%, 90%);
     font-size: 1.6rem;
     background-color: hsl(0, 0%, 20%);
@@ -6,8 +8,10 @@
     border-radius: 5px;
     text-wrap: wrap;
     border: 1px solid hsl(0, 0%, 30%);
+    cursor: pointer;
 }
-.title{
+
+.title {
     display: flex;
     font-size: 1.8rem;
     font-weight: 700;
@@ -16,7 +20,28 @@
     text-underline-offset: 8px; */
     margin-bottom: 10px;
 }
-.deleteBtn{
+
+.taskDescription {
+  position: relative;
+  overflow: hidden;
+  max-height: 72px;
+  transition: max-height 0.3s ease;
+}
+
+.taskDescription.overflowing:not(.expanded)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 24px;
+  background: linear-gradient(
+    transparent,
+    hsl(0, 0%, 20%)
+  );
+}
+
+.deleteBtn {
     color: red;
     /* background-color: red; */
     background-color: hsl(0, 0%, 20%);
@@ -25,25 +50,29 @@
     border-radius: 5px;
     cursor: pointer;
 }
-.editBtn{
+
+.editBtn {
     color: white;
     background-color: hsl(0, 0%, 20%);
-    border : none;
+    border: none;
     margin-left: auto;
     margin-right: 15px;
     cursor: pointer;
 }
+
 @media (prefers-color-scheme: light) {
-    .taskContainer{
+    .taskContainer {
         color: black;
         background-color: hsl(0, 0%, 100%);
         border-color: hsl(0, 0%, 85%);
     }
-    .deleteBtn{
+
+    .deleteBtn {
         background-color: hsl(0, 0%, 100%);
     }
-    .editBtn{
-        color : black;
+
+    .editBtn {
+        color: black;
         background-color: hsl(0, 0%, 100%);
     }
 }

@@ -46,6 +46,26 @@ export function NewTaskContainer({
     // prevent double click submission
     if (isSubmitting) return;
 
+    if(!title.trim()){
+      showNotification("Title is required", "error");
+      return;
+    }
+
+    if(!description.trim()){
+      showNotification("Description is required", "error");
+      return;
+    }
+
+    if (title.trim().length > 100) {
+      showNotification("Title cannot exceed 100 characters", "error");
+      return;
+    }
+
+    if (description.trim().length > 1500) {
+      showNotification("Description cannot exceed 1500 characters", "error");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -89,14 +109,10 @@ export function NewTaskContainer({
       fetchTasks();
 
       showNotification("Task created successfully", "success");
-
     } catch (error) {
       console.error(error);
 
-      showNotification(
-        error.message || "Something went wrong",
-        "error"
-      );
+      showNotification(error.message || "Something went wrong", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -105,14 +121,9 @@ export function NewTaskContainer({
   return (
     <>
       <div className="newTask">
-        <form
-          className="newTaskContainer"
-          onSubmit={addNewTask}
-        >
+        <form noValidate className="newTaskContainer" onSubmit={addNewTask}>
           <div className="header">
-            <p>
-              {editingTask ? "Edit Task" : "New Task"}
-            </p>
+            <p>{editingTask ? "Edit Task" : "New Task"}</p>
 
             <button
               type="button"
@@ -131,7 +142,9 @@ export function NewTaskContainer({
             value={title}
             required
             disabled={isSubmitting}
+            maxLength={100}
           />
+          <p>{title.length}/100</p>
 
           <textarea
             placeholder="Description.."
@@ -140,13 +153,11 @@ export function NewTaskContainer({
             value={description}
             required
             disabled={isSubmitting}
+            maxLength={1500}
           />
+          <p>{description.length}/1500</p>
 
-          <button
-            type="submit"
-            className="addTaskBtn"
-            disabled={isSubmitting}
-          >
+          <button type="submit" className="addTaskBtn" disabled={isSubmitting}>
             {isSubmitting
               ? "Saving..."
               : editingTask
@@ -156,10 +167,7 @@ export function NewTaskContainer({
         </form>
       </div>
 
-      <div
-        className="closer"
-        onClick={closeForm}
-      />
+      <div className="closer" onClick={closeForm} />
     </>
   );
 }

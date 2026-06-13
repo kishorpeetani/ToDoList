@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import "../styles/Tasks.css";
 import { deleteTask as deleteTaskApi } from "../api/task.api.js";
 
@@ -18,6 +19,38 @@ export function Tasks({ tasks, setTasks, onEditTask, showNotification }) {
       console.error("Error deleting task:", error);
       showNotification(error.message || "Failed to delete task", "error");
     }
+  }
+
+  function Task({ task }) {
+    const [expanded, setExpanded] = useState(false);
+    const [isOverflowing, setIsOverflowing] = useState(false);
+    const descriptionRef = useRef(null);
+
+    useEffect(() => {
+      const el = descriptionRef.current;
+
+      if (el) {
+        setIsOverflowing(el.scrollHeight > el.clientHeight);
+      }
+    }, []);
+
+    return (
+      <p
+        ref={descriptionRef}
+        className={`taskDescription
+        ${expanded ? "expanded" : ""}
+        ${isOverflowing ? "overflowing" : ""}
+      `}
+        onClick={() => isOverflowing && setExpanded(!expanded)}
+        style={{
+          maxHeight: expanded
+            ? `${descriptionRef.current?.scrollHeight}px`
+            : "72px",
+        }}
+      >
+        {task.description}
+      </p>
+    );
   }
   return (
     <>
@@ -54,7 +87,7 @@ export function Tasks({ tasks, setTasks, onEditTask, showNotification }) {
                 </svg>
               </button>
             </p>
-            <p>{task.description}</p>
+            <Task task={task} />
           </div>
         );
       })}
