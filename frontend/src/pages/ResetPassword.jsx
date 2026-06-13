@@ -97,7 +97,12 @@ export function ResetPassword({ showNotification }) {
         navigate("/signin");
       }
     } catch (error) {
-      showNotification(error.message, "error");
+      showNotification(
+        error.data?.code === "USER_MESSAGE"
+          ? error.message
+          : "Something went wrong",
+        "error"
+      );
     } finally {
       setIsResetting(false);
     }
@@ -119,7 +124,12 @@ export function ResetPassword({ showNotification }) {
         showNotification("OTP resent successfully", "success");
       }
     } catch (error) {
-      showNotification(error.message, "error");
+      showNotification(
+        error.data?.code === "USER_MESSAGE"
+          ? error.message
+          : "Something went wrong",
+        "error"
+      );
     } finally {
       setIsResending(false);
     }

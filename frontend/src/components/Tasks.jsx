@@ -17,7 +17,13 @@ export function Tasks({ tasks, setTasks, onEditTask, showNotification }) {
       }
     } catch (error) {
       console.error("Error deleting task:", error);
-      showNotification(error.message || "Failed to delete task", "error");
+
+      showNotification(
+        error.data?.code === "USER_MESSAGE"
+          ? error.message
+          : "Something went wrong",
+        "error"
+      );
     }
   }
 

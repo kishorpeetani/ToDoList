@@ -48,7 +48,12 @@ export function SignUp({ showNotification }) {
       if (error.status === 409) {
         showNotification("Account already exists !!", "error");
       } else {
-        showNotification(error.message, "error");
+        showNotification(
+          error.data?.code === "USER_MESSAGE"
+            ? error.message
+            : "Something went wrong",
+          "error"
+        );
       }
       console.error(error);
     } finally {

@@ -44,7 +44,12 @@ export function ForgotPassword({ showNotification }) {
 
         return;
       }
-      showNotification(error.message, "error");
+      showNotification(
+        error.data?.code === "USER_MESSAGE"
+          ? error.message
+          : "Something went wrong",
+        "error"
+      );
     } finally {
       setIsSending(false);
     }

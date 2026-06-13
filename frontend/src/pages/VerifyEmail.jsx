@@ -73,7 +73,12 @@ export function VerifyEmail({ showNotification }) {
         navigate("/signin");
       }
     } catch (error) {
-      showNotification(error.message, "error");
+      showNotification(
+        error.data?.code === "USER_MESSAGE"
+          ? error.message
+          : "Something went wrong",
+        "error"
+      );
     } finally {
       setIsVerifying(false);
     }
@@ -95,7 +100,12 @@ export function VerifyEmail({ showNotification }) {
         setCooldown(30);
       }
     } catch (error) {
-      showNotification(error.message, "error");
+      showNotification(
+        error.data?.code === "USER_MESSAGE"
+          ? error.message
+          : "Something went wrong",
+        "error"
+      );
     } finally {
       setIsResending(false);
     }

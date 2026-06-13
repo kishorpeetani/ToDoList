@@ -7,14 +7,14 @@ export const authorize = async(req, res, next)=>{
         const token = req.cookies.token;
 
         if(!token){
-            return res.status(401).json({ message : "Unauthorised access"});
+            return res.status(401).json({ code: "USER_MESSAGE", message : "Unauthorised access"});
         }
 
         const decoded = jwt.verify(token, JWT_SECRET);
 
         const user = await User.findById(decoded.userId);
 
-        if(!user) return res.status(401).json({ message : "Unauthorised access"});
+        if(!user) return res.status(401).json({ code: "USER_MESSAGE", message : "Unauthorised access"});
 
         req.user = user;
 
@@ -23,15 +23,15 @@ export const authorize = async(req, res, next)=>{
     catch(error){
         res.status(401).json({
             success : false,
+            code: "USER_MESSAGE",
             message : "Unauthorised access",
-            error : error.message
         });
     }
 };
 
 export const isAdmin = async(req, res, next)=>{
     if(!req.user || req.user.role !== "admin"){
-        return res.status(401).json({ message : "Access denied. Admin only !!!" });
+        return res.status(401).json({ code: "USER_MESSAGE", message : "Access denied" });
     }
 
     next();

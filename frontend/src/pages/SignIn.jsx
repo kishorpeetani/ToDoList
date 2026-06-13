@@ -51,7 +51,7 @@ export function SignIn({ setIsLoggedIn, setUser, showNotification }) {
       } else if (error.status === 404) {
         showNotification("User not Found !!", "error");
       } else {
-        showNotification(error.message || "Something went wrong", "error");
+        showNotification("Something went wrong", "error");
       }
       console.error(error);
     }

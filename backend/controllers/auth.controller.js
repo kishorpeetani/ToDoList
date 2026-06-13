@@ -125,6 +125,7 @@ export const signOut = async (req, res) => {
 
     res.status(200).json({
         success: true,
+        code: "USER_MESSAGE",
         message: "Logged out successfully"
     });
 };
@@ -138,6 +139,7 @@ export const verifyOtp = async (req, res, next) => {
         if (!user) {
             return res.status(404).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message: "User not found",
             });
         }
@@ -145,6 +147,7 @@ export const verifyOtp = async (req, res, next) => {
         if (user.isVerified) {
             return res.status(400).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message: "Email already verified"
             });
         }
@@ -155,6 +158,7 @@ export const verifyOtp = async (req, res, next) => {
         ) {
             return res.status(400).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message: "OTP expired",
             });
         }
@@ -162,6 +166,7 @@ export const verifyOtp = async (req, res, next) => {
         if (!/^\d{6}$/.test(otp)) {
             return res.status(400).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message: "Invalid OTP format"
             });
         }
@@ -169,6 +174,7 @@ export const verifyOtp = async (req, res, next) => {
         if (user.otp !== otp) {
             return res.status(400).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message: "Invalid OTP",
             });
         }
@@ -199,6 +205,7 @@ export const resendOtp = async (req, res, next) => {
         if (!user) {
             return res.status(404).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message: "User not found",
             });
         }
@@ -206,6 +213,7 @@ export const resendOtp = async (req, res, next) => {
         if (user.isVerified) {
             return res.status(400).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message: "Email already verified"
             });
         }
@@ -216,6 +224,7 @@ export const resendOtp = async (req, res, next) => {
         ) {
             return res.status(429).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message:
                     "Please wait before requesting another OTP",
             });
@@ -262,6 +271,7 @@ export const forgotPassword = async (
         if (!user) {
             return res.status(404).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message: "User not found",
             });
         }
@@ -284,6 +294,7 @@ export const forgotPassword = async (
         ) {
             return res.status(429).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message:
                     "Please wait before requesting another OTP",
             });
@@ -333,6 +344,7 @@ export const resetPassword = async (
         if (!newPassword || newPassword.length < 6) {
             return res.status(400).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message:
                     "Password must be at least 6 characters",
             });
@@ -345,6 +357,7 @@ export const resetPassword = async (
         if (!user) {
             return res.status(404).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message: "User not found",
             });
         }
@@ -352,6 +365,7 @@ export const resetPassword = async (
         if (!/^\d{6}$/.test(otp)) {
             return res.status(400).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message:
                     "Invalid OTP format",
             });
@@ -363,6 +377,7 @@ export const resetPassword = async (
         ) {
             return res.status(400).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message: "OTP expired",
             });
         }
@@ -370,6 +385,7 @@ export const resetPassword = async (
         if (user.otp !== otp) {
             return res.status(400).json({
                 success: false,
+                code: "USER_MESSAGE",
                 message: "Invalid OTP",
             });
         }

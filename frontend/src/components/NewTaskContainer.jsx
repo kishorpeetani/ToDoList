@@ -46,12 +46,12 @@ export function NewTaskContainer({
     // prevent double click submission
     if (isSubmitting) return;
 
-    if(!title.trim()){
+    if (!title.trim()) {
       showNotification("Title is required", "error");
       return;
     }
 
-    if(!description.trim()){
+    if (!description.trim()) {
       showNotification("Description is required", "error");
       return;
     }
@@ -112,7 +112,12 @@ export function NewTaskContainer({
     } catch (error) {
       console.error(error);
 
-      showNotification(error.message || "Something went wrong", "error");
+      showNotification(
+        error.data?.code === "USER_MESSAGE"
+          ? error.message
+          : "Something went wrong",
+        "error"
+      );
     } finally {
       setIsSubmitting(false);
     }
