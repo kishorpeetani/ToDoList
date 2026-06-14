@@ -1,9 +1,11 @@
-.app-title{
-    font-size: 4rem;
-    font-weight: 800;
-    position: fixed;
-    top :10vh;
-    /* left: 20px; */
+.app-title {
+  font-size: 4rem;
+  font-weight: 800;
+  position: fixed;
+  top: 10vh;
+  /* left: 20px; */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .authPage {
@@ -16,7 +18,7 @@
 
 .sign-box {
   width: 400px;
-  max-width: 90%;  
+  max-width: 90%;
   background-color: hsl(0, 0%, 12%);
   border: 1px solid rgba(99, 102, 241, 0.35);
   border-radius: 24px;
