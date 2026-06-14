@@ -8,6 +8,6 @@ export const {
     JWT_SECRET,
     JWT_EXPIRES_IN,
     CLIENT_URL,
-    RESEND_API_KEY,
-    MAIL_FROM,
+    EMAIL_PASS,
+    EMAIL_USER
 } = process.env;
