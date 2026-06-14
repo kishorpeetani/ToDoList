@@ -1,6 +1,12 @@
 # ToDo List Application
 
-A full-stack ToDo List application built using the MERN stack with secure authentication using HTTP-only cookies, task management features, and a clean responsive frontend.
+A full-stack ToDo List application built using the MERN stack with secure authentication using HTTP-only cookies, task management features, password recovery via OTP, email integration, and a clean responsive frontend.
+
+---
+
+## 🌐 Live Demo
+
+**Application:** https://todolist.kishorkumar.app
 
 ---
 
@@ -13,7 +19,10 @@ A full-stack ToDo List application built using the MERN stack with secure authen
 * Secure JWT Authentication
 * HTTP-only Cookie-based Authentication
 * Auto Login on Refresh using `/auth/me`
+* Protected Routes
 * User Logout
+* OTP-based Password Reset
+* Secure Password Recovery Flow
 
 ### Task Management
 
@@ -22,9 +31,25 @@ A full-stack ToDo List application built using the MERN stack with secure authen
 * Edit Existing Tasks
 * Delete Tasks
 * Tasks Sorted by Latest Updated
-* Real-time UI Refresh after CRUD operations
+* Real-time UI Refresh after CRUD Operations
 * Loading States for Better UX
 * Notification Messages for Success/Error
+
+### Email Integration
+
+* Transactional Email Integration using Resend
+* OTP Delivery for Password Reset
+* Verified Custom Domain Configuration
+* Production-ready Email Delivery
+
+### Security
+
+* Password Hashing using bcryptjs
+* JWT Authorization Middleware
+* HTTP-only Cookies
+* Protected API Endpoints
+* Environment Variable Configuration
+* CORS Configuration
 
 ---
 
@@ -34,6 +59,7 @@ A full-stack ToDo List application built using the MERN stack with secure authen
 
 * React.js
 * Vite
+* React Router
 * CSS
 * Fetch API
 
@@ -48,11 +74,16 @@ A full-stack ToDo List application built using the MERN stack with secure authen
 * cookie-parser
 * CORS
 
+### Services
+
+* Resend Email API
+
 ### Deployment
 
 * Frontend: Vercel
 * Backend: Render
 * Database: MongoDB Atlas
+* Custom Domain: Name.com
 
 ---
 
@@ -65,9 +96,8 @@ todo-app/
 │   ├── src/
 │   │   ├── api/
 │   │   ├── components/
+│   │   ├── pages/
 │   │   ├── styles/
-│   │   ├── SignIn.jsx
-│   │   ├── SignUp.jsx
 │   │   ├── App.jsx
 │   │   └── main.jsx
 │   │
@@ -80,6 +110,7 @@ todo-app/
 │   │   ├── middleware/
 │   │   ├── models/
 │   │   ├── routes/
+│   │   ├── services/
 │   │   └── server.js
 │   │
 │   └── package.json
@@ -91,13 +122,23 @@ todo-app/
 
 ## 🔐 Authentication Flow
 
-1. User signs up using email and password
-2. User signs in
-3. Backend generates JWT token
-4. Token is stored in HTTP-only cookies
-5. Browser automatically sends cookie with every request
-6. Backend verifies user using middleware
-7. Protected routes like tasks are accessed securely
+1. User signs up using email and password.
+2. Password is hashed before storing in MongoDB.
+3. User signs in using registered credentials.
+4. Backend generates a JWT token.
+5. JWT is stored in an HTTP-only cookie.
+6. Browser automatically sends the cookie with authenticated requests.
+7. Authentication middleware validates the token.
+8. Protected routes are accessible only to authenticated users.
+
+### Password Recovery Flow
+
+1. User requests password reset.
+2. Backend generates a One-Time Password (OTP).
+3. OTP is sent to the user's registered email via Resend.
+4. User verifies the OTP.
+5. User sets a new password.
+6. Password is securely hashed and updated.
 
 ---
 
@@ -111,6 +152,16 @@ todo-app/
 | POST   | `/auth/sign-in`  | Login user                 |
 | POST   | `/auth/sign-out` | Logout user                |
 | GET    | `/auth/me`       | Get current logged-in user |
+
+---
+
+### Password Reset Routes
+
+| Method | Endpoint                | Description                  |
+| ------ | ----------------------- | ---------------------------- |
+| POST   | `/auth/forgot-password` | Send OTP to registered email |
+| POST   | `/auth/verify-otp`      | Verify OTP                   |
+| POST   | `/auth/reset-password`  | Reset password               |
 
 ---
 
@@ -130,11 +181,17 @@ todo-app/
 ### Backend `.env`
 
 ```env
-PORT=5007
+PORT=3000
+
 MONGODB_URI=your_mongodb_connection_string
+
 JWT_SECRET=your_secret_key
 JWT_EXPIRES_IN=7d
-NODE_ENV=production
+
+CLIENT_URL=http://localhost:5173
+
+RESEND_API_KEY=your_resend_api_key
+EMAIL_FROM=noreply@yourdomain.com
 ```
 
 ---
@@ -192,25 +249,28 @@ Deploy backend on Render with:
 
 * Root Directory → `backend`
 * Build Command → `npm install`
-* Start Command → `node server.js`
-
----
+* Start Command → `npm start`
 
 ### Frontend (Vercel)
 
 Deploy frontend on Vercel with:
 
 * Root Directory → `frontend`
-* Framework → `Vite`
+* Framework Preset → `Vite`
+
+### Domain Configuration
+
+* Domain Registered via Name.com
+* Custom Domain Connected to Vercel
+* Email Domain Verified for Resend
 
 ---
-
 
 ## 👨‍💻 Author
 
 Developed by **Peetani Kishor Kumar**
 
-A full-stack MERN project focused on secure authentication, clean architecture, and production-ready deployment.
+A full-stack MERN project focused on secure authentication, task management, OTP-based password recovery, email integration using Resend, and production-ready cloud deployment.
 
 ---
 
