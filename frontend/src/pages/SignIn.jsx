@@ -8,6 +8,7 @@ export function SignIn({ setIsLoggedIn, setUser, showNotification }) {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSigningIn, setIsSigningIn] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -30,6 +31,8 @@ export function SignIn({ setIsLoggedIn, setUser, showNotification }) {
     }
 
     try {
+      setIsSigningIn(true);
+
       const data = await signIn(email, password);
 
       if (data.success) {
@@ -54,6 +57,8 @@ export function SignIn({ setIsLoggedIn, setUser, showNotification }) {
         showNotification("Something went wrong", "error");
       }
       console.error(error);
+    } finally {
+      setIsSigningIn(false);
     }
   }
 
@@ -78,7 +83,9 @@ export function SignIn({ setIsLoggedIn, setUser, showNotification }) {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit">Continue</button>
+          <button type="submit" disabled={isSigningIn}>
+            {isSigningIn ? "Signing In..." : "Continue"}
+          </button>
         </form>
 
         <p>

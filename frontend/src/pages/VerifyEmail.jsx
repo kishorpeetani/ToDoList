@@ -131,8 +131,15 @@ export function VerifyEmail({ showNotification }) {
             required
           />
 
-          <button type="submit" disabled={isVerifying}>
-            {isVerifying ? "Verifying..." : "Verify OTP"}
+          <button disabled={isVerifying}>
+            {isVerifying ? (
+              <>
+                <span className="buttonSpinner"></span>
+                Verifying...
+              </>
+            ) : (
+              "Verify OTP"
+            )}
           </button>
 
           <p>

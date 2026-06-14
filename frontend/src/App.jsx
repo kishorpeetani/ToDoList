@@ -56,7 +56,8 @@ function App() {
   if (loading) {
     return (
       <div className="loadingScreen">
-        <h2>Checking your session...</h2>
+        <div className="spinner"></div>
+        <h2>Checking your session</h2>
       </div>
     );
   }
@@ -135,6 +136,11 @@ function App() {
         <Route
           path="/"
           element={<Navigate to={isLoggedIn ? "/tasks" : "/signin"} />}
+        />
+
+        <Route
+          path="*"
+          element={<Navigate to={isLoggedIn ? "/tasks" : "/signin"} replace />}
         />
       </Routes>
     </>

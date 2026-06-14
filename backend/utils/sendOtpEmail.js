@@ -6,12 +6,26 @@ import {
 
 const transporter =
   nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    family: 4,
     auth: {
       user: EMAIL_USER,
       pass: EMAIL_PASS,
     },
   });
+
+transporter.verify((error) => {
+  if (error) {
+    console.error(
+      "SMTP Connection Failed:",
+      error
+    );
+  } else {
+    console.log("SMTP Ready");
+  }
+});
 
 export const sendOtpEmail = async (
   email,
